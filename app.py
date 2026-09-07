@@ -68,6 +68,23 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
+    /* Hide Streamlit Community Cloud profile avatar, viewer badges, and branding */
+    #MainMenu { visibility: hidden !important; }
+    footer { visibility: hidden !important; }
+    header { visibility: hidden !important; }
+    .viewerBadge_container__1QSob,
+    [class*="viewerBadge"],
+    [class*="ProfileBadge"],
+    [class*="profileBadge"],
+    [data-testid="stStatusWidget"],
+    div[class*="stAppDeployButton"],
+    div[class*="viewerBadge"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
     /* Top banner styling */
     .hero-container {
         background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #1E3A8A 100%);
