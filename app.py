@@ -460,12 +460,14 @@ with tab1:
     enh_bytes = encode_image_bytes(enhanced)
 
     if auto_run_ocr:
-        raw_ocr = cached_recognize_ocr(raw_bytes)
-        enh_ocr = cached_recognize_ocr(enh_bytes)
-    else:
-        if st.button("🚀 Run OCR Analysis on Current Plate", type="primary"):
+        with st.spinner("Extracting text via OCR..."):
             raw_ocr = cached_recognize_ocr(raw_bytes)
             enh_ocr = cached_recognize_ocr(enh_bytes)
+    else:
+        if st.button("🚀 Run OCR Analysis on Current Plate", type="primary"):
+            with st.spinner("Extracting text via OCR..."):
+                raw_ocr = cached_recognize_ocr(raw_bytes)
+                enh_ocr = cached_recognize_ocr(enh_bytes)
         else:
             raw_ocr = {"text": "Click 'Run OCR'", "confidence": 0.0, "is_valid_format": False}
             enh_ocr = {"text": "Click 'Run OCR'", "confidence": 0.0, "is_valid_format": False}
