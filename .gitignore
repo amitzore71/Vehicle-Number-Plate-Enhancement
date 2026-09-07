@@ -220,6 +220,8 @@ __marimo__/
 # Datasets
 data/raw/
 data/processed/
+data/Indian_Number_Plates/
+data/number_plate_images_ocr/
 
 # Model weights
 *.pt
