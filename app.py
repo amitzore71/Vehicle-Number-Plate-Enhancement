@@ -68,20 +68,46 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Hide Streamlit Community Cloud profile avatar, viewer badges, and branding */
-    #MainMenu { visibility: hidden !important; }
-    footer { visibility: hidden !important; }
-    header { visibility: hidden !important; }
+    /* Complete suppression of Creator Badge, GitHub avatar, and Streamlit branding */
+    #MainMenu { visibility: hidden !important; display: none !important; }
+    footer { visibility: hidden !important; display: none !important; }
+    header { visibility: hidden !important; display: none !important; }
+    
+    /* Target the specific Creator badge, GitHub avatar, and floating toolbar */
+    img[src*="githubusercontent.com"],
+    img[src*="avatars"],
+    img[alt*="amitzore71"],
+    a[href*="amitzore71"],
+    a[href*="github.com/amitzore71"],
+    div:has(> img[src*="githubusercontent.com"]),
+    div:has(> a[href*="amitzore71"]),
+    div:has(img[src*="githubusercontent.com"]),
+    div:has(a[href*="amitzore71"]),
+    div:has(a[href*="streamlit.io"]),
+    a[href*="streamlit.io"],
+    a[href*="share.streamlit.io"],
     .viewerBadge_container__1QSob,
     [class*="viewerBadge"],
+    [class*="ViewerBadge"],
+    [class*="creatorBadge"],
+    [class*="CreatorBadge"],
     [class*="ProfileBadge"],
     [class*="profileBadge"],
+    [class*="creator"],
+    [class*="Creator"],
     [data-testid="stStatusWidget"],
+    [data-testid="stToolbar"],
+    [data-testid="stDecoration"],
     div[class*="stAppDeployButton"],
     div[class*="viewerBadge"] {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        max-width: 0 !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
         pointer-events: none !important;
     }
 
@@ -214,9 +240,55 @@ st.markdown("""
         border-radius: 8px;
         padding: 10px 18px;
         font-weight: 600;
-    }
 </style>
 """, unsafe_allow_html=True)
+
+import streamlit.components.v1 as components
+components.html("""
+<script>
+function purgeCreatorBadge() {
+    try {
+        const rootDoc = window.parent.document;
+        if (!rootDoc) return;
+        
+        const selectors = [
+            'img[src*="githubusercontent.com"]',
+            'img[src*="avatars"]',
+            'a[href*="amitzore71"]',
+            '[class*="viewerBadge"]',
+            '[class*="creatorBadge"]',
+            '[class*="ProfileBadge"]',
+            'div[data-testid="stStatusWidget"]'
+        ];
+        
+        selectors.forEach(sel => {
+            const els = rootDoc.querySelectorAll(sel);
+            els.forEach(el => {
+                let p = el;
+                for (let i = 0; i < 5; i++) {
+                    if (p && p.parentElement && p.parentElement.tagName !== 'BODY') {
+                        const style = window.getComputedStyle(p);
+                        if (style.position === 'fixed') {
+                            p.style.setProperty('display', 'none', 'important');
+                            p.style.setProperty('visibility', 'hidden', 'important');
+                            p.style.setProperty('opacity', '0', 'important');
+                            p.style.setProperty('pointer-events', 'none', 'important');
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                }
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+            });
+        });
+    } catch (err) {}
+}
+
+purgeCreatorBadge();
+setInterval(purgeCreatorBadge, 300);
+</script>
+""", height=0, width=0)
 
 
 # ----------------------------------------------------
